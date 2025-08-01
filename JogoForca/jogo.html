@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Forca</title>
+</head>
+<body>
+  <script>
+    // Lista com no mínimo 20 palavras
+    const palavras = [
+      "banana", "computador", "javascript", "monitor", "celular",
+      "cadeira", "teclado", "internet", "programa", "ferramenta",
+      "desenho", "guitarra", "futebol", "bicicleta", "caderno",
+      "floresta", "viagem", "controle", "pintura", "travesseiro"
+    ];
+
+    function escolherPalavra() {
+      const indice = Math.floor(Math.random() * palavras.length);
+      return palavras[indice];
+    }
+
+    function mostrarPalavra(palavra, letrasCertas) {
+      let exibicao = '';
+      for (const letra of palavra) {
+        exibicao += letrasCertas.includes(letra) ? letra + ' ' : '_ ';
+      }
+      return exibicao.trim();
+    }
+
+    let jogarNovamente = true;
+
+    while (jogarNovamente) {
+      const palavraSecreta = escolherPalavra();
+      let letrasCertas = [];
+      let letrasErradas = [];
+      const maxErros = 6;
+      let erros = 0;
+      let venceu = false;
+
+      while (erros < maxErros && !venceu) {
+        const estadoAtual = mostrarPalavra(palavraSecreta, letrasCertas);
+        const tentativa = prompt(
+          `Palavra: ${estadoAtual}\nErros: ${erros} de ${maxErros}\nLetras erradas: ${letrasErradas.join(', ')}\nDigite uma letra:`).toLowerCase();
+
+        if (!tentativa || tentativa.length !== 1 || !/[a-z]/.test(tentativa)) {
+          alert("Digite apenas uma letra válida.");
+          continue;
+        }
+
+        if (letrasCertas.includes(tentativa) || letrasErradas.includes(tentativa)) {
+          alert("Você já tentou essa letra.");
+          continue;
+        }
+
+        if (palavraSecreta.includes(tentativa)) {
+          letrasCertas.push(tentativa);
+        } else {
+          letrasErradas.push(tentativa);
+          erros++;
+        }
+
+        // Verifica se todas as letras foram descobertas
+        venceu = palavraSecreta.split('').every(letra => letrasCertas.includes(letra));
+      }
+
+      if (venceu) {
+        alert(`Parabéns! Você acertou a palavra: ${palavraSecreta}`);
+      } else {
+        alert(`Você perdeu! A palavra era: ${palavraSecreta}`);
+      }
+
+      const resposta = prompt("Deseja jogar novamente? (s) Sim / (n) Não");
+      jogarNovamente = resposta.toLowerCase() === 's';
+    }
+
+    alert("Obrigado por jogar!");
+  </script>
+</body>
+</html>
